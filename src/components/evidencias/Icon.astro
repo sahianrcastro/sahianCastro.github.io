@@ -1,0 +1,19 @@
+---
+import { FaProjectDiagram, FaTable, FaDatabase, FaFolderOpen, FaRegFileAlt } from "react-icons/fa";
+
+interface Props {
+  id: string;
+  className?: string;
+}
+
+const { id, className = "h-8 w-8" } = Astro.props;
+const icons: Record<string, any> = {
+  modelado: FaProjectDiagram,
+  normalizacion: FaTable,
+  sql: FaDatabase,
+  proyecto: FaFolderOpen,
+};
+const Icon = icons[id] ?? FaRegFileAlt;
+---
+
+<Icon className={className} />

@@ -1,0 +1,52 @@
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import PageHeader from "@components/common/PageHeader.astro";
+import EvidenciaIcon from "@components/evidencias/Icon.astro";
+import { getEntries } from "@lib/contentParser";
+import { withBase } from "@lib/url";
+import type { EvidenciasEntry } from "@/types";
+
+const entries = ((await getEntries("evidencias")) as EvidenciasEntry[]).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout
+  title="Evidencias"
+  description="Evidencias del proceso de Sayis en Bases de Datos 1: Modelado, Normalización, SQL y Proyecto."
+>
+  <PageHeader title="Evidencias" />
+  <section class="section-sm pt-4">
+    <div class="container">
+      <p class="text-center mb-8 px-2">
+        Aquí iré documentando las evidencias de mi proceso en Bases de Datos 1.
+      </p>
+      <div class="row">
+        {
+          entries.map((entry) => {
+            const hasContent = Boolean(entry.body?.trim());
+            return (
+              <div class="col-12 sm:col-6 lg:col-3 mb-6">
+                <a
+                  href={withBase(`/evidencias/${entry.id}`)}
+                  class="glass rounded-lg p-6 h-full flex flex-col items-center text-center gap-3 no-underline text-txt-p dark:text-darkmode-txt-p hover:opacity-80 transition intersect:animate-fadeUp opacity-0"
+                >
+                  <EvidenciaIcon id={entry.id} className="h-10 w-10" />
+                  <h2 class="h4">{entry.data.title}</h2>
+                  {entry.data.description && (
+                    <span class="text-sm text-txt-light dark:text-darkmode-txt-light">
+                      {entry.data.description}
+                    </span>
+                  )}
+                  <span class="mt-auto glass-t shadow-none rounded px-3 py-0.5 text-xs font-semibold">
+                    {hasContent ? "Ver evidencias" : "Próximamente"}
+                  </span>
+                </a>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

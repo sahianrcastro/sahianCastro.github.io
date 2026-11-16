@@ -1,8 +1,20 @@
 ---
-title: Hey, I'm Jane Doe!
-description: this is meta description
-image: "@assets/profile/jane-doe.jpg"
+title: Presentación
+description: Presentación de Sahian Johana Rincón Castro (Sayis), estudiante de Ingeniería de Sistemas — e-portafolio de Bases de Datos 1.
+fullName: Sahian Johana Rincón Castro
+nickname: Sayis
+image: "@assets/profile/sayis.jpg"
+imageAlt: Foto de Sahian Johana Rincón Castro (Sayis)
+# REEMPLAZAR CON LINK DEL VIDEO
+# Pega aquí el enlace de tu video (YouTube o Google Drive). Ejemplos válidos:
+#   https://www.youtube.com/watch?v=XXXXXXXXXXX
+#   https://youtu.be/XXXXXXXXXXX
+#   https://drive.google.com/file/d/XXXXXXXX/view
+# Mientras esté vacío, la página muestra un aviso de "Video próximamente".
+videoUrl: ""
 draft: false
 ---
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis illum nesciunt commodi vel nisi ut alias excepturi ipsum, totam, labore tempora, odit ex iste tempore sed. Fugit voluptatibus perspiciatis assumenda nulla ad nihil, omnis vel, doloremque sit quam autem optio maiores, illum eius facilis et quo consectetur provident dolor similique! Enim voluptatem dicta expedita veritatis repellat dolorum impedit, provident quasi at.
+¡Hola! Soy **Sahian Johana Rincón Castro**, pero me gusta que me llamen **Sayis**.
+
+Soy estudiante de Ingeniería de Sistemas y este es mi espacio profesional para documentar mi proceso en **Bases de Datos 1**.

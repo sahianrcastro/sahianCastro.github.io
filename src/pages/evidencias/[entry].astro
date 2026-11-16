@@ -1,0 +1,74 @@
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import PageHeader from "@components/common/PageHeader.astro";
+import Button from "@components/common/Button.astro";
+import EvidenciaIcon from "@components/evidencias/Icon.astro";
+import { getEntries } from "@lib/contentParser";
+import { withBase } from "@lib/url";
+import { render } from "astro:content";
+import type { EvidenciasEntry } from "@/types";
+
+export async function getStaticPaths() {
+  const entries = ((await getEntries("evidencias")) as EvidenciasEntry[]).sort(
+    (a, b) => a.data.order - b.data.order
+  );
+  return entries.map((entry) => ({
+    params: { entry: entry.id },
+    props: { entry, all: entries },
+  }));
+}
+
+const { entry, all } = Astro.props as { entry: EvidenciasEntry; all: EvidenciasEntry[] };
+const { title, description } = entry.data;
+const hasContent = Boolean(entry.body?.trim());
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${title} · Evidencias`} description={description}>
+  <PageHeader title={title} />
+  <section class="section-sm pt-4">
+    <div class="container">
+      <nav aria-label="Categorías de evidencias" class="mb-6 flex flex-wrap justify-center gap-2">
+        {
+          all.map((item) => (
+            <a
+              href={withBase(`/evidencias/${item.id}`)}
+              class={`rounded-full px-4 py-1 text-sm no-underline text-txt-p dark:text-darkmode-txt-p ${
+                item.id === entry.id ? "glass font-bold" : "glass-t shadow-none"
+              }`}
+              aria-current={item.id === entry.id ? "page" : undefined}
+            >
+              {item.data.title}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="row justify-center">
+        <div class="col-12 lg:col-10 glass rounded-lg p-6 md:p-10 intersect:animate-fadeUp opacity-0 intersect-no-queue">
+          {
+            hasContent ? (
+              <div class="content">
+                <Content />
+              </div>
+            ) : (
+              <div class="flex flex-col items-center text-center gap-4 py-6">
+                <EvidenciaIcon id={entry.id} className="h-14 w-14 opacity-70" />
+                <span class="glass-t shadow-none rounded px-3 py-0.5 text-sm font-semibold">
+                  Próximamente
+                </span>
+                <h2 class="h4">Aún no hay entregas publicadas en {title}</h2>
+                {description && (
+                  <p class="text-txt-light dark:text-darkmode-txt-light max-w-xl">{description}</p>
+                )}
+                <div class="mt-2">
+                  <Button link="/evidencias" label="Volver a Evidencias" hoverInvert />
+                </div>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

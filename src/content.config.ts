@@ -30,6 +30,9 @@ const about = defineCollection({
     searchable.extend({
       image: image().optional(),
       imageAlt: z.string().default(""),
+      fullName: z.string().optional(),
+      nickname: z.string().optional(),
+      videoUrl: z.string().default(""),
     }),
 });
 
@@ -75,6 +78,16 @@ const docs = defineCollection({
     }),
 });
 
+const evidencias = defineCollection({
+  loader: glob({
+    pattern: "**\/[^_]*.{md,mdx}",
+    base: "./src/content/evidencias",
+  }),
+  schema: searchable.extend({
+    order: z.number().default(0),
+  }),
+});
+
 const home = defineCollection({
   loader: glob({ pattern: "-index.{md,mdx}", base: "./src/content/home" }),
   schema: ({ image }) =>
@@ -83,12 +96,14 @@ const home = defineCollection({
       imageAlt: z.string().default(""),
       title: z.string(),
       content: z.string(),
-      button: z
-        .object({
-          label: z.string(),
-          link: z.string().optional(),
-        })
-        .optional(),
+      buttons: z
+        .array(
+          z.object({
+            label: z.string(),
+            link: z.string(),
+          }),
+        )
+        .default([]),
     }),
 });
 
@@ -168,6 +183,7 @@ export const collections = {
   authors,
   blog,
   docs,
+  evidencias,
   home,
   indexCards,
   poetry,

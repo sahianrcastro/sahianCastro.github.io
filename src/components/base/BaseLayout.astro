@@ -7,6 +7,7 @@ import "@/styles/main.scss";
 import { ClientRouter } from "astro:transitions";
 import Background from "@/components/base/Background.astro";
 import { Tooltips } from "astro-tooltips";
+import { withBase } from "@lib/url";
 
 // types for frontmatters
 export interface Props {
@@ -19,36 +20,42 @@ export interface Props {
 
 const { title, description, image, noindex, canonical } = Astro.props;
 
-const siteTitle = "Astrogon";
-const siteDescription = "Astrogon is a simple and elegant Astro theme.";
-const siteImage = "@assets/og-image.png";
-const siteAuthor = "Jane Doe";
-const baseUrl = "https://janedoe.com";
+const siteTitle = "Sayis · E-portafolio Bases de Datos 1";
+const siteDescription =
+  "E-portafolio de Sahian Johana Rincón Castro (Sayis), estudiante de Ingeniería de Sistemas, para la asignatura Bases de Datos 1.";
+const siteImage = withBase("/favicon/android-chrome-512x512.png");
+const siteAuthor = "Sahian Johana Rincón Castro";
+const site = Astro.site ?? new URL("https://sahianrcastro.github.io");
+const pageUrl = new URL(Astro.url.pathname, site).href;
+const imageUrl = new URL(image ? image : siteImage, site).href;
+const fullTitle = title ? `${plainify(title)} | Sayis` : siteTitle;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <!-- favicon -->
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/favicon/apple-touch-icon.png"
-    />
+    <link rel="icon" href={withBase("/favicon/favicon.ico")} sizes="any" />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="/favicon/favicon-32x32.png"
+      href={withBase("/favicon/favicon-32x32.png")}
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/favicon/favicon-16x16.png"
+      href={withBase("/favicon/favicon-16x16.png")}
     />
-    
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href={withBase("/favicon/apple-touch-icon.png")}
+    />
+    <link rel="manifest" href={withBase("/site.webmanifest")} />
+
+    <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
 
     <meta name="theme-name" content="pages" />
     <meta name="msapplication-TileColor" content="#000000" />
@@ -70,9 +77,7 @@ const baseUrl = "https://janedoe.com";
       content="width=device-width, initial-scale=1, maximum-scale=5"
     />
 
-    <title>
-      {plainify(title ? title : siteTitle)}
-    </title>
+    <title>{fullTitle}</title>
 
     {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
     {noindex && <meta name="robots" content="noindex,nofollow" />}
@@ -82,7 +87,7 @@ const baseUrl = "https://janedoe.com";
       content={plainify(description ? description : siteDescription)}
     />
     <meta name="author" content={siteAuthor} />
-    <meta property="og:title" content={plainify(title ? title : siteTitle)} />
+    <meta property="og:title" content={fullTitle} />
     <meta
       property="og:description"
       content={plainify(description ? description : siteDescription)}
@@ -90,22 +95,16 @@ const baseUrl = "https://janedoe.com";
     <meta property="og:type" content="website" />
     <meta
       property="og:url"
-      content={`${baseUrl}/${Astro.url.pathname.replace("/", "")}`}
+      content={pageUrl}
     />
-    <meta
-      property="og:image"
-      content={`${baseUrl}${image ? image : siteImage}`}
-    />
+    <meta property="og:image" content={imageUrl} />
 
-    <meta name="twitter:title" content={plainify(title ? title : siteTitle)} />
+    <meta name="twitter:title" content={fullTitle} />
     <meta
       name="twitter:description"
       content={plainify(description ? description : siteDescription)}
     />
-    <meta
-      name="twitter:image"
-      content={`${baseUrl}${image ? image : siteImage}`}
-    />
+    <meta name="twitter:image" content={imageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Katex -->

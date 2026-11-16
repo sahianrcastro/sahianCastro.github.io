@@ -10,43 +10,41 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { image, imageAlt, title, content, button } = entry.data;
+const { image, imageAlt, title, content, buttons } = entry.data;
 ---
 
 <BaseLayout>
-  <!-- Banner -->
   <section class="section">
     <div class="container">
       <div class="row justify-center">
-        <div class="text-center lg:col-6">
+        <div class="text-center px-4 sm:col-10 md:col-8 lg:col-6">
           {
             image && (
-              <div class="blur-[0px]">
-                <Image
-                class="mb-6 w-64"
+              <Image
+                class="mx-auto mb-6 h-40 w-40 sm:h-52 sm:w-52 rounded-full object-cover object-center border-4 border-white dark:border-darkmode-bg-s shadow-lg"
                 src={image}
                 alt={imageAlt}
-                width={1024}
-                height={1024}
+                width={512}
+                height={512}
                 loading="eager"
               />
-              </div>
-              
             )
           }
           <h1 set:html={markdownify(title)} class="mb-4" />
           <p set:html={markdownify(content)} class="mb-8" />
-          {
-            button && (
-              <Button
-                label={button.label}
-                link={button.link}
-                newtab
-                hoverInvert
-                color=""
-              />
-            )
-          }
+          <div class="flex flex-wrap justify-center gap-3">
+            {
+              buttons.map((button) => (
+                <Button
+                  label={button.label}
+                  link={button.link}
+                  newtab={/^https?:/.test(button.link)}
+                  hoverInvert
+                  color=""
+                />
+              ))
+            }
+          </div>
         </div>
       </div>
     </div>

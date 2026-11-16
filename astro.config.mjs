@@ -13,8 +13,17 @@ import remarkMath from "remark-math";
 // https://astro.build/config
 export default defineConfig({
   site: "https://sahianrcastro.github.io",
-  base: "/",
+  // El repositorio se llama "sahianCastro.github.io" (distinto del usuario "sahianrcastro"),
+  // por eso GitHub Pages lo publica en /sahianCastro.github.io/.
+  // Si algún día renombras el repo a "sahianrcastro.github.io", cambia base a "/".
+  base: "/sahianCastro.github.io",
   trailingSlash: "ignore",
+  vite: {
+    // Corrige el error "does not provide an export named 'default'" de react-lite-youtube-embed al compilar
+    ssr: {
+      noExternal: ["react-lite-youtube-embed"]
+    }
+  },
   prefetch: {
     prefetchAll: true
   },

@@ -1,38 +1,87 @@
 ---
 import BaseLayout from "@components/base/BaseLayout.astro";
-import { markdownify } from "@lib/textConverter";
+import PageHeader from "@components/common/PageHeader.astro";
 import { Image } from "astro:assets";
 import type { AboutEntry } from "@/types";
 import { render } from "astro:content";
+import { toEmbedUrl } from "@lib/url";
+import { FaVideo } from "react-icons/fa";
 
 interface Props {
   entry: AboutEntry;
 }
 
 const { entry } = Astro.props;
-const { title, description, image, imageAlt } = entry.data;
+const { title, description, image, imageAlt, fullName, nickname, videoUrl } = entry.data;
 const { Content } = await render(entry);
+const embedUrl = videoUrl.trim() ? toEmbedUrl(videoUrl.trim()) : "";
 ---
 
 <BaseLayout title={title} description={description} image={image?.src}>
-  <section class="section-sm">
+  <PageHeader title={title} />
+
+  <section class="section-sm pt-4">
     <div class="container">
       <div class="row justify-center">
-        <div class="glass rounded-lg text-center p-8 md:col-10 lg:col-7 intersect:animate-fadeUp opacity-0 intersect-no-queue">
-          {
-            image && (
-              <Image
-                class="mx-auto mb-6 rounded-lg w-64"
-                src={image}
-                alt={imageAlt}
-                width={1024}
-                height={1024}
-                loading="eager"
-              />
-            )
-          }
-          <h2 set:html={markdownify(title)} class="h3 mb-6" />
-            <Content />
+        <div class="glass rounded-lg p-6 md:p-8 col-12 lg:col-10 intersect:animate-fadeUp opacity-0 intersect-no-queue">
+          <div class="flex flex-col items-center gap-6 md:flex-row md:items-center md:gap-10">
+            {
+              image && (
+                <Image
+                  class="mx-0 h-44 w-44 shrink-0 rounded-full object-cover object-center border-4 border-white dark:border-darkmode-bg-s shadow-lg md:h-56 md:w-56"
+                  src={image}
+                  alt={imageAlt}
+                  width={512}
+                  height={512}
+                  loading="eager"
+                />
+              )
+            }
+            <div class="text-center md:text-left">
+              {nickname && <h2 class="h3 mb-1">¡Hola, soy {nickname}!</h2>}
+              {fullName && (
+                <p class="mb-4 text-txt-light dark:text-darkmode-txt-light">{fullName}</p>
+              )}
+              <div class="content">
+                <Content />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-center mt-8">
+        <div class="glass rounded-lg p-6 md:p-8 col-12 lg:col-10 intersect:animate-fadeUp opacity-0 intersect-no-queue">
+          <h2 class="h4 mb-4 flex items-center gap-2">
+            <FaVideo className="inline-block" /> Video de presentación
+          </h2>
+
+          <div class="relative w-full overflow-hidden rounded-lg aspect-video bg-bg-s dark:bg-darkmode-bg-s">
+            <!-- REEMPLAZAR CON LINK DEL VIDEO -->
+            <!-- El enlace se pega en src/content/about/-index.md, en el campo "videoUrl". -->
+            <!-- Ejemplo: videoUrl: "https://www.youtube.com/watch?v=XXXXXXXXXXX" -->
+            {
+              embedUrl ? (
+                <iframe
+                  class="absolute inset-0 h-full w-full"
+                  src={embedUrl}
+                  title={`Video de presentación de ${nickname ?? "Sayis"}`}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen
+                />
+              ) : (
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border dark:border-darkmode-border rounded-lg p-4 text-center">
+                  <FaVideo className="h-10 w-10 opacity-60" />
+                  <span class="font-semibold text-txt-p dark:text-darkmode-txt-p">Video próximamente</span>
+                  <span class="text-sm text-txt-light dark:text-darkmode-txt-light">
+                    Aquí aparecerá mi video de presentación.
+                  </span>
+                </div>
+              )
+            }
+          </div>
         </div>
       </div>
     </div>

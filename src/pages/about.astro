@@ -1,9 +1,5 @@
 ---
-import type { AboutEntry } from "@/types";
-import EntryLayout from "@components/about/EntryLayout.astro";
-import { getIndex } from "@lib/contentParser";
+import { withBase } from "@lib/url";
 
-const entry = (await getIndex("about")) as AboutEntry;
+return Astro.redirect(withBase("/presentacion"));
 ---
-
-<EntryLayout entry={entry} />
