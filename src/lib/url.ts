@@ -23,3 +23,9 @@ export const toEmbedUrl = (url: string): string => {
   if (drive) return `https://drive.google.com/file/d/${drive[1]}/preview`;
   return url;
 };
+
+// Convierte un enlace de Spotify (playlist, álbum, canción) en su versión embebible.
+export const toSpotifyEmbed = (url: string): string => {
+  const m = url.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(playlist|album|track|artist|episode|show)\/([A-Za-z0-9]+)/);
+  return m ? `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator` : "";
+};

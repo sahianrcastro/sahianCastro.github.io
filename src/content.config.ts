@@ -33,6 +33,9 @@ const about = defineCollection({
       fullName: z.string().optional(),
       nickname: z.string().optional(),
       videoUrl: z.string().default(""),
+      spotifyUrl: z.string().default(""),
+      tools: z.array(z.string()).default([]),
+      semesterGoal: z.string().default(""),
     }),
 });
 

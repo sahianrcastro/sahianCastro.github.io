@@ -4,6 +4,7 @@ import { markdownify } from "@lib/textConverter";
 import Button from "@components/common/Button.astro";
 import type { HomeEntry } from "@/types";
 import { Image } from "astro:assets";
+import { withBase } from "@lib/url";
 
 interface Props {
   entry: HomeEntry;
@@ -11,6 +12,9 @@ interface Props {
 
 const { entry } = Astro.props;
 const { image, imageAlt, title, content, buttons } = entry.data;
+
+const greetingGif = withBase("/images/cinnamoroll-saludo.gif");
+const greetingGifFallback = "https://media1.tenor.com/m/P5EJALTMklMAAAAC/cinnamoroll.gif";
 ---
 
 <BaseLayout>
@@ -30,7 +34,20 @@ const { image, imageAlt, title, content, buttons } = entry.data;
               />
             )
           }
-          <h1 set:html={markdownify(title)} class="mb-4" />
+          <div class="mb-4 flex items-center justify-center gap-3">
+            <span class="w-[50px] shrink-0" aria-hidden="true"></span>
+            <h1 set:html={markdownify(title)} class="mb-0" />
+            <img
+              src={greetingGif}
+              alt="Cinnamoroll saludando"
+              width="50"
+              height="50"
+              class="mx-0 h-[50px] w-[50px] shrink-0 object-contain"
+              loading="eager"
+              data-fallback={greetingGifFallback}
+              onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}else{this.style.visibility='hidden';}"
+            />
+          </div>
           <p set:html={markdownify(content)} class="mb-8" />
           <div class="flex flex-wrap justify-center gap-3">
             {
