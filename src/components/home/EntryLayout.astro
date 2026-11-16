@@ -14,7 +14,6 @@ const { entry } = Astro.props;
 const { image, imageAlt, title, content, buttons } = entry.data;
 
 const greetingGif = withBase("/images/cinnamoroll-saludo.gif");
-const greetingGifFallback = "https://media1.tenor.com/m/P5EJALTMklMAAAAC/cinnamoroll.gif";
 ---
 
 <BaseLayout>
@@ -44,8 +43,7 @@ const greetingGifFallback = "https://media1.tenor.com/m/P5EJALTMklMAAAAC/cinnamo
               height="50"
               class="mx-0 h-[50px] w-[50px] shrink-0 object-contain"
               loading="eager"
-              data-fallback={greetingGifFallback}
-              onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}else{this.style.visibility='hidden';}"
+              onerror="this.style.visibility='hidden'"
             />
           </div>
           <p set:html={markdownify(content)} class="mb-8" />

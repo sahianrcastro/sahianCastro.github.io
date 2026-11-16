@@ -14,10 +14,36 @@ imageAlt: Foto de Sahian Johana Rincón Castro (Sayis)
 videoUrl: ""
 spotifyUrl: "https://open.spotify.com/playlist/2Ijf2QUdFnSZoSO9m7kaVb?si=01374ef493fd4309"
 tools:
-  - Oracle SQL
-  - Modelado E-R (Peter Chen)
-  - Normalización
-  - Git & GitHub
+  - category: Bases de Datos
+    items:
+      - Oracle AI Database 26ai
+      - Oracle SQL Developer
+      - Oracle Data Modeler
+      - Modelado E-R (Peter Chen)
+      - Modelo Relacional
+      - Normalización (3FN)
+      - Álgebra Relacional
+  - category: Lenguajes
+    items:
+      - Java
+      - Python
+      - JavaScript
+      - TypeScript
+  - category: Desarrollo Web y APIs
+    items:
+      - Angular
+      - Spring Boot
+      - Astro
+      - HTML5/CSS3
+      - Swagger
+  - category: Entornos y Herramientas
+    items:
+      - Git
+      - GitHub
+      - GitHub Pages
+      - Eclipse IDE
+      - Oracle Linux
+      - VirtualBox
 # COMPLETAR FRASE DEL VIDEO
 # Escribe aquí cómo termina tu frase "Este semestre quiero demostrar que…" (sin repetir el inicio).
 # Ejemplo de formato: semesterGoal: "puedo …"

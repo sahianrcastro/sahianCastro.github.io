@@ -5,7 +5,7 @@ import { Image } from "astro:assets";
 import type { AboutEntry } from "@/types";
 import { render } from "astro:content";
 import { toEmbedUrl, toSpotifyEmbed } from "@lib/url";
-import { FaVideo, FaTools, FaFlag } from "react-icons/fa";
+import { FaVideo, FaTools, FaFlag, FaDatabase, FaCode, FaGlobe, FaLaptopCode } from "react-icons/fa";
 
 interface Props {
   entry: AboutEntry;
@@ -15,6 +15,12 @@ const { entry } = Astro.props;
 const { title, description, image, imageAlt, fullName, nickname, videoUrl, spotifyUrl, tools, semesterGoal } = entry.data;
 const { Content } = await render(entry);
 const embedUrl = videoUrl.trim() ? toEmbedUrl(videoUrl.trim()) : "";
+const categoryIcons: Record<string, any> = {
+  "Bases de Datos": FaDatabase,
+  "Lenguajes": FaCode,
+  "Desarrollo Web y APIs": FaGlobe,
+  "Entornos y Herramientas": FaLaptopCode,
+};
 const spotifyEmbed = spotifyUrl.trim() ? toSpotifyEmbed(spotifyUrl.trim()) : "";
 ---
 
@@ -94,13 +100,25 @@ const spotifyEmbed = spotifyUrl.trim() ? toSpotifyEmbed(spotifyUrl.trim()) : "";
                 <h2 class="h4 mb-4 flex items-center gap-2">
                   <FaTools className="inline-block" /> Herramientas y tecnologías
                 </h2>
-                <ul class="flex flex-wrap gap-2 list-none p-0 m-0">
-                  {tools.map((tool) => (
-                    <li class="glass-t shadow-none rounded-full px-4 py-1 text-sm font-semibold text-txt-p dark:text-darkmode-txt-p">
-                      {tool}
-                    </li>
-                  ))}
-                </ul>
+                <div class="grid gap-4 md:grid-cols-2">
+                  {tools.map((group) => {
+                    const Icon = categoryIcons[group.category] ?? FaTools;
+                    return (
+                      <div class="rounded-lg border border-border dark:border-darkmode-border p-4">
+                        <h3 class="h6 mb-3 flex items-center gap-2 font-semibold">
+                          <Icon className="inline-block opacity-70" /> {group.category}
+                        </h3>
+                        <ul class="flex flex-wrap gap-2 list-none p-0 m-0">
+                          {group.items.map((tool) => (
+                            <li class="glass-t shadow-none rounded-full px-3 py-0.5 text-sm font-medium text-txt-p dark:text-darkmode-txt-p">
+                              {tool}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )
           }
