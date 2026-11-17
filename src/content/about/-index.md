@@ -11,7 +11,7 @@ imageAlt: Foto de Sahian Johana Rincón Castro (Sayis)
 #   https://youtu.be/XXXXXXXXXXX
 #   https://drive.google.com/file/d/XXXXXXXX/view
 # Mientras esté vacío, la página muestra un aviso de "Video próximamente".
-videoUrl: ""
+videoUrl: "https://youtu.be/nZ00EZV9GJk"
 spotifyUrl: "https://open.spotify.com/playlist/2Ijf2QUdFnSZoSO9m7kaVb?si=01374ef493fd4309"
 tools:
   - category: Bases de Datos

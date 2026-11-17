@@ -1,11 +1,6 @@
 ---
-import CollectionLayout from "@components/docs/CollectionLayout.astro";
-import { getIndex, getGroups } from "@lib/contentParser";
-import type { DocsEntry } from "@/types";
-import { sortByTitle } from "@lib/sortFunctions";
+// Página de la plantilla Astrogon deshabilitada: redirige al inicio del portafolio.
+import { withBase } from "@lib/url";
 
-const collectionIndex = (await getIndex("docs")) as DocsEntry;
-const groupIndices = (await getGroups("docs", sortByTitle)) as DocsEntry[];
+return Astro.redirect(withBase("/"));
 ---
-
-<CollectionLayout entries={groupIndices} collectionIndex={collectionIndex} />

@@ -20,7 +20,7 @@ export interface Props {
 
 const { title, description, image, noindex, canonical } = Astro.props;
 
-const siteTitle = "Sayis · E-portafolio Bases de Datos 1";
+const siteTitle = "Sayis | Portafolio Bases de Datos 1";
 const siteDescription =
   "E-portafolio de Sahian Johana Rincón Castro (Sayis), estudiante de Ingeniería de Sistemas, para la asignatura Bases de Datos 1.";
 const siteImage = withBase("/favicon/android-chrome-512x512.png");
@@ -28,7 +28,8 @@ const siteAuthor = "Sahian Johana Rincón Castro";
 const site = Astro.site ?? new URL("https://sahianrcastro.github.io");
 const pageUrl = new URL(Astro.url.pathname, site).href;
 const imageUrl = new URL(image ? image : siteImage, site).href;
-const fullTitle = title ? `${plainify(title)} | Sayis` : siteTitle;
+const pageTitle = title ? plainify(title).replace(/\s+/g, " ").trim() : "";
+const fullTitle = pageTitle ? `${pageTitle} · ${siteTitle}` : siteTitle;
 ---
 
 <!DOCTYPE html>
@@ -107,25 +108,6 @@ const fullTitle = title ? `${plainify(title)} | Sayis` : siteTitle;
     <meta name="twitter:image" content={imageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Katex -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
-      integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib"
-      crossorigin="anonymous"
-    />
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"
-      integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu9WSYMCuulLhIqYSGZ2gKCJWIqhBWqMQfh"
-      crossorigin="anonymous"></script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
-      integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh"
-      crossorigin="anonymous"
-      onload="renderMathInElement(document.body);"></script>
-      
     <!-- https://docs.astro.build/en/guides/view-transitions -->
     <ClientRouter fallback="swap" />
     <Tooltips interactive={false} delay={[333, 0]} />

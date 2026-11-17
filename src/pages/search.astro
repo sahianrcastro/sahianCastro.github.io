@@ -1,25 +1,6 @@
 ---
-import type { SearchableEntry } from "@/types";
-import EntryLayout from "@components/search/EntryLayout.astro";
-import { getEntriesBatch } from "@lib/contentParser";
-import type { CollectionKey } from "astro:content";
+// Página de la plantilla Astrogon deshabilitada: redirige al inicio del portafolio.
+import { withBase } from "@lib/url";
 
-const searchableCollections = [
-  "about",
-  "authors",
-  "blog",
-  "docs",
-  "poetry",
-  "portfolio",
-  "recipes",
-  "terms",
-] as CollectionKey[];
-
-const searchList = (await getEntriesBatch(
-  searchableCollections,
-  undefined,
-  false
-)) as SearchableEntry[];
+return Astro.redirect(withBase("/"));
 ---
-
-<EntryLayout searchList={searchList} />

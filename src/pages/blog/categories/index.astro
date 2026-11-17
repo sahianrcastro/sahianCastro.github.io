@@ -1,11 +1,6 @@
 ---
-import TaxaLayout from "@components/blog/TaxaLayout.astro";
-import { getTaxa, getTaxaMultiset } from "@lib/taxonomyParser";
+// Página de la plantilla Astrogon deshabilitada: redirige al inicio del portafolio.
+import { withBase } from "@lib/url";
 
-const collection = "blog";
-const taxonomy = "categories";
-const taxa = await getTaxa(collection, taxonomy);
-const allTaxa = await getTaxaMultiset(collection, taxonomy);
+return Astro.redirect(withBase("/"));
 ---
-
-<TaxaLayout taxonomy={taxonomy} taxa={taxa} allTaxa={allTaxa} />

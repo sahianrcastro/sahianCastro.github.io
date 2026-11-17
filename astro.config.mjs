@@ -29,7 +29,11 @@ export default defineConfig({
   },
   integrations: [
     react(),
-    sitemap(),
+    sitemap({
+      // Solo las páginas propias del portafolio (no las de la plantilla).
+      filter: (page) =>
+        /\/sahianCastro\.github\.io\/(presentacion\/?|evidencias(\/.*)?)?$/.test(page)
+    }),
     tailwind({
       config: {
         applyBaseStyles: false

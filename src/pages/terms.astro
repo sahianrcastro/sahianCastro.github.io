@@ -1,9 +1,6 @@
 ---
-import EntryLayout from "@components/terms/EntryLayout.astro";
-import { getIndex } from "@lib/contentParser";
-import type { TermsEntry } from "@/types";
+// Página de la plantilla Astrogon deshabilitada: redirige al inicio del portafolio.
+import { withBase } from "@lib/url";
 
-const entry = await getIndex("terms") as TermsEntry;
+return Astro.redirect(withBase("/"));
 ---
-
-<EntryLayout entry={entry} />

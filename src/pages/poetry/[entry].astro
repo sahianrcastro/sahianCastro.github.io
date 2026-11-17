@@ -1,27 +1,6 @@
 ---
-import type { PoetryEntry } from "@/types";
-import { sortByDate } from "@lib/sortFunctions";
-import EntryLayout from "@components/poetry/EntryLayout.astro";
-import { getEntries } from "@lib/contentParser";
-
-export async function getStaticPaths() {
-  const entries = (await getEntries("poetry", sortByDate)) as PoetryEntry[];
-  const pageIDs: string[] = entries.map((entry) => entry.id);
-  const pageCount = pageIDs.length;
-
-  const paths = entries.map((entry) => {
-    const pageIndex = pageIDs.indexOf(entry.id);
-    return {
-      params: {
-        entry: entry.id,
-      },
-      props: { entry, pageIDs, pageIndex, pageCount },
-    };
-  });
-  return paths;
+// Página de la plantilla Astrogon deshabilitada: no genera ninguna ruta.
+export function getStaticPaths() {
+  return [];
 }
-
-const { entry, pageIDs, pageIndex, pageCount } = Astro.props;
 ---
-
-<EntryLayout entry={entry} pageIDs={pageIDs} pageIndex={pageIndex} pageCount={pageCount} />
