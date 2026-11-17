@@ -5,14 +5,14 @@ import { Image } from "astro:assets";
 import type { AboutEntry } from "@/types";
 import { render } from "astro:content";
 import { toEmbedUrl, toSpotifyEmbed } from "@lib/url";
-import { FaVideo, FaTools, FaFlag, FaDatabase, FaCode, FaGlobe, FaLaptopCode } from "react-icons/fa";
+import { FaVideo, FaTools, FaDatabase, FaCode, FaGlobe, FaLaptopCode } from "react-icons/fa";
 
 interface Props {
   entry: AboutEntry;
 }
 
 const { entry } = Astro.props;
-const { title, description, image, imageAlt, fullName, nickname, videoUrl, spotifyUrl, tools, semesterGoal } = entry.data;
+const { title, description, image, imageAlt, fullName, nickname, videoUrl, spotifyUrl, tools } = entry.data;
 const { Content } = await render(entry);
 const embedUrl = videoUrl.trim() ? toEmbedUrl(videoUrl.trim()) : "";
 const categoryIcons: Record<string, any> = {
@@ -96,7 +96,7 @@ const spotifyEmbed = spotifyUrl.trim() ? toSpotifyEmbed(spotifyUrl.trim()) : "";
         <div class="glass rounded-lg p-6 md:p-8 col-12 lg:col-10 intersect:animate-fadeUp opacity-0 intersect-no-queue">
           {
             tools.length > 0 && (
-              <div class="mb-8">
+              <div>
                 <h2 class="h4 mb-4 flex items-center gap-2">
                   <FaTools className="inline-block" /> Herramientas y tecnologías
                 </h2>
@@ -123,18 +123,6 @@ const spotifyEmbed = spotifyUrl.trim() ? toSpotifyEmbed(spotifyUrl.trim()) : "";
             )
           }
 
-          <h2 class="h4 mb-4 flex items-center gap-2">
-            <FaFlag className="inline-block" /> Meta del semestre
-          </h2>
-          <!-- COMPLETAR FRASE DEL VIDEO -->
-          <!-- El cierre de la frase se escribe en src/content/about/-index.md, campo "semesterGoal". -->
-          <blockquote class="relative m-0 rounded-lg border-l-4 border-txt-light dark:border-darkmode-txt-light glass-t shadow-none px-6 py-5 md:px-8">
-            <span class="absolute -top-2 left-3 font-primary text-5xl leading-none opacity-30" aria-hidden="true">“</span>
-            <p class="font-primary text-lg md:text-xl italic text-txt-p dark:text-darkmode-txt-p m-0">
-              Este semestre quiero demostrar que{semesterGoal.trim() ? ` ${semesterGoal.trim()}` : "…"}
-            </p>
-            <footer class="mt-2 text-sm text-txt-light dark:text-darkmode-txt-light">— {nickname ?? "Sayis"}</footer>
-          </blockquote>
         </div>
       </div>
 

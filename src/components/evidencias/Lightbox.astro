@@ -1,0 +1,112 @@
+<dialog
+  id="lightbox"
+  class="m-0 h-[100dvh] max-h-none w-screen max-w-none bg-[#0b0b0b] p-0 text-white backdrop:bg-black"
+  aria-label="Vista ampliada del diagrama"
+>
+  <div class="flex h-full flex-col">
+    <div class="flex items-center gap-3 px-4 py-3 bg-black/60">
+      <div id="lightbox-title" class="flex-1 truncate text-sm font-semibold md:text-base"></div>
+      <button
+        type="button"
+        data-lightbox-zoom
+        class="rounded-md border border-white/40 px-3 py-1 text-sm hover:bg-white/10"
+      >
+        Tamaño real
+      </button>
+      <a
+        id="lightbox-open"
+        href="#"
+        target="_blank"
+        rel="noopener"
+        class="hidden rounded-md border border-white/40 px-3 py-1 text-sm text-white no-underline hover:bg-white/10 sm:inline-block"
+      >
+        Abrir en pestaña nueva
+      </a>
+      <button
+        type="button"
+        data-lightbox-close
+        class="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-2xl leading-none hover:bg-white/30"
+        aria-label="Cerrar vista ampliada"
+      >
+        ×
+      </button>
+    </div>
+    <div id="lightbox-scroll" class="flex flex-1 overflow-auto p-2" data-lightbox-backdrop>
+      <img
+        id="lightbox-img"
+        src=""
+        alt=""
+        class="m-auto block max-h-full max-w-full object-contain cursor-zoom-in"
+      />
+    </div>
+    <div class="py-2 text-center text-xs opacity-70">
+      Clic en la imagen para alternar entre ajustar a pantalla y tamaño real · Esc o × para cerrar
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const getEls = () => ({
+    dialog: document.getElementById("lightbox") as HTMLDialogElement | null,
+    img: document.getElementById("lightbox-img") as HTMLImageElement | null,
+    title: document.getElementById("lightbox-title"),
+    open: document.getElementById("lightbox-open") as HTMLAnchorElement | null,
+    zoomBtn: document.querySelector("[data-lightbox-zoom]") as HTMLButtonElement | null,
+  });
+
+  let zoomed = false;
+
+  const setZoom = (value: boolean) => {
+    const { img, zoomBtn } = getEls();
+    if (!img) return;
+    zoomed = value;
+    img.classList.toggle("max-h-full", !value);
+    img.classList.toggle("max-w-full", !value);
+    img.classList.toggle("max-w-none", value);
+    img.classList.toggle("cursor-zoom-in", !value);
+    img.classList.toggle("cursor-zoom-out", value);
+    if (zoomBtn) zoomBtn.textContent = value ? "Ajustar a pantalla" : "Tamaño real";
+  };
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    const { dialog, img, title, open } = getEls();
+    if (!dialog || !img) return;
+
+    const trigger = target.closest("[data-lightbox-src]") as HTMLElement | null;
+    if (trigger) {
+      event.preventDefault();
+      const src = trigger.dataset.lightboxSrc!;
+      img.src = src;
+      img.alt = trigger.dataset.lightboxAlt ?? "";
+      if (title) title.textContent = trigger.dataset.lightboxTitle ?? "";
+      if (open) open.href = src;
+      setZoom(false);
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
+      return;
+    }
+
+    if (target.closest("[data-lightbox-close]")) {
+      dialog.close();
+      return;
+    }
+    if (target.closest("[data-lightbox-zoom]") || target === img) {
+      setZoom(!zoomed);
+      return;
+    }
+    if (target.hasAttribute("data-lightbox-backdrop")) {
+      dialog.close();
+    }
+  });
+
+  document.addEventListener(
+    "close",
+    (event) => {
+      if ((event.target as HTMLElement)?.id === "lightbox") {
+        document.body.style.overflow = "";
+      }
+    },
+    true
+  );
+</script>

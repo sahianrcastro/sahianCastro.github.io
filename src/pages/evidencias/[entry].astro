@@ -3,6 +3,8 @@ import BaseLayout from "@components/base/BaseLayout.astro";
 import PageHeader from "@components/common/PageHeader.astro";
 import Button from "@components/common/Button.astro";
 import EvidenciaIcon from "@components/evidencias/Icon.astro";
+import Lightbox from "@components/evidencias/Lightbox.astro";
+import { FaSearchPlus, FaExternalLinkAlt } from "react-icons/fa";
 import { getEntries } from "@lib/contentParser";
 import { withBase } from "@lib/url";
 import { render } from "astro:content";
@@ -19,8 +21,9 @@ export async function getStaticPaths() {
 }
 
 const { entry, all } = Astro.props as { entry: EvidenciasEntry; all: EvidenciasEntry[] };
-const { title, description } = entry.data;
-const hasContent = Boolean(entry.body?.trim());
+const { title, description, items } = entry.data;
+const hasBody = Boolean(entry.body?.trim());
+const hasContent = hasBody || items.length > 0;
 const { Content } = await render(entry);
 ---
 
@@ -48,8 +51,62 @@ const { Content } = await render(entry);
         <div class="col-12 lg:col-10 glass rounded-lg p-6 md:p-10 intersect:animate-fadeUp opacity-0 intersect-no-queue">
           {
             hasContent ? (
-              <div class="content">
-                <Content />
+              <div class="flex flex-col gap-8">
+                {hasBody && (
+                  <div class="content">
+                    <Content />
+                  </div>
+                )}
+                {items.map((item, index) => (
+                  <article class="rounded-lg border border-border dark:border-darkmode-border bg-bg-p/40 dark:bg-darkmode-bg-p/40 overflow-hidden">
+                    <button
+                      type="button"
+                      class="group relative block w-full bg-[#121212] cursor-zoom-in"
+                      data-lightbox-src={withBase(item.image)}
+                      data-lightbox-alt={item.alt}
+                      data-lightbox-title={item.title}
+                      aria-label={`Ampliar diagrama: ${item.title}`}
+                    >
+                      <img
+                        src={withBase(item.preview ?? item.image)}
+                        alt={item.alt}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        decoding="async"
+                        class="mx-auto block max-h-[26rem] w-full object-contain transition duration-300 group-hover:scale-[1.02]"
+                      />
+                      <span class="pointer-events-none absolute bottom-3 right-3 flex items-center gap-2 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white">
+                        <FaSearchPlus /> Clic para ampliar
+                      </span>
+                    </button>
+                    <div class="p-5 md:p-6">
+                      <h2 class="h4 mb-2">{item.title}</h2>
+                      <p class="mb-4 text-sm md:text-base">{item.description}</p>
+                      {item.tags.length > 0 && (
+                        <ul class="flex flex-wrap gap-2 list-none p-0 m-0">
+                          {item.tags.map((tag) => (
+                            <li class="glass-t shadow-none rounded-full px-3 py-0.5 text-xs font-semibold text-txt-p dark:text-darkmode-txt-p">
+                              {tag}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {item.links.length > 0 && (
+                        <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                          {item.links.map((link) => (
+                            <a
+                              href={withBase(link.url)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="inline-flex items-center gap-1 font-semibold text-txt-p dark:text-darkmode-txt-p underline underline-offset-4"
+                            >
+                              {link.label} <FaExternalLinkAlt className="h-3 w-3" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                ))}
               </div>
             ) : (
               <div class="flex flex-col items-center text-center gap-4 py-6">
@@ -71,4 +128,5 @@ const { Content } = await render(entry);
       </div>
     </div>
   </section>
+  {items.length > 0 && <Lightbox />}
 </BaseLayout>

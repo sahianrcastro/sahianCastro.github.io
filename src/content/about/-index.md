@@ -44,10 +44,6 @@ tools:
       - Eclipse IDE
       - Oracle Linux
       - VirtualBox
-# COMPLETAR FRASE DEL VIDEO
-# Escribe aquí cómo termina tu frase "Este semestre quiero demostrar que…" (sin repetir el inicio).
-# Ejemplo de formato: semesterGoal: "puedo …"
-semesterGoal: ""
 draft: false
 ---
 

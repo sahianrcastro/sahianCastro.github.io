@@ -42,7 +42,6 @@ const about = defineCollection({
           }),
         )
         .default([]),
-      semesterGoal: z.string().default(""),
     }),
 });
 
@@ -95,6 +94,21 @@ const evidencias = defineCollection({
   }),
   schema: searchable.extend({
     order: z.number().default(0),
+    items: z
+      .array(
+        z.object({
+          title: z.string(),
+          description: z.string(),
+          image: z.string(),
+          preview: z.string().optional(),
+          alt: z.string().default(""),
+          tags: z.array(z.string()).default([]),
+          links: z
+            .array(z.object({ label: z.string(), url: z.string() }))
+            .default([]),
+        }),
+      )
+      .default([]),
   }),
 });
 
