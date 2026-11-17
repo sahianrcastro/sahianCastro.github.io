@@ -1,0 +1,59 @@
+---
+interface Props {
+  name: string;
+  columns: string[];
+}
+
+const { name, columns } = Astro.props;
+
+const parsed = columns.map((raw) => {
+  const match = raw.match(/^(pkfk|pk|fk):(.*)$/);
+  const key = match ? match[1] : "";
+  const label = match ? match[2].trim() : raw.trim();
+  return { key, label };
+});
+
+const keyLabel: Record<string, string> = { pk: "PK", fk: "FK", pkfk: "PK · FK" };
+const keyClass: Record<string, string> = {
+  pk: "bg-amber-200/70 text-amber-950 dark:bg-amber-400/25 dark:text-amber-100",
+  fk: "bg-sky-200/70 text-sky-950 dark:bg-sky-400/25 dark:text-sky-100",
+  pkfk: "bg-violet-200/70 text-violet-950 dark:bg-violet-400/25 dark:text-violet-100",
+};
+---
+
+<figure class="m-0 min-w-0">
+  <figcaption class="mb-1 font-primary text-base font-bold tracking-wide text-txt-p dark:text-darkmode-txt-p">
+    {name}
+  </figcaption>
+  <div class="overflow-x-auto rounded-lg border border-border dark:border-darkmode-border">
+    <table class="m-0 w-max min-w-full border-collapse text-left text-sm">
+      <thead>
+        <tr>
+          {
+            parsed.map((col) => (
+              <th
+                scope="col"
+                class={`whitespace-nowrap border-r border-border px-3 py-2 font-semibold last:border-r-0 dark:border-darkmode-border ${
+                  col.key ? keyClass[col.key] : "bg-bg-p/60 text-txt-p dark:bg-darkmode-bg-p/60 dark:text-darkmode-txt-p"
+                } ${col.key.startsWith("pk") ? "underline underline-offset-4" : ""} ${col.key === "fk" ? "italic" : ""}`}
+              >
+                {col.label}
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {
+            parsed.map((col) => (
+              <td class="whitespace-nowrap border-r border-t border-border px-3 py-1 text-xs text-txt-light last:border-r-0 dark:border-darkmode-border dark:text-darkmode-txt-light">
+                {col.key ? keyLabel[col.key] : "—"}
+              </td>
+            ))
+          }
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</figure>

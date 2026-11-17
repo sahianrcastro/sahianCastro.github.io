@@ -4,7 +4,9 @@ import PageHeader from "@components/common/PageHeader.astro";
 import Button from "@components/common/Button.astro";
 import EvidenciaIcon from "@components/evidencias/Icon.astro";
 import Lightbox from "@components/evidencias/Lightbox.astro";
-import { FaSearchPlus, FaExternalLinkAlt } from "react-icons/fa";
+import NormalizationExercise from "@components/evidencias/NormalizationExercise.astro";
+import TabsScript from "@components/evidencias/TabsScript.astro";
+import { FaSearchPlus, FaExternalLinkAlt, FaDownload, FaGithub, FaFolderOpen, FaSitemap, FaLink, FaDesktop, FaServer, FaDatabase } from "react-icons/fa";
 import { getEntries } from "@lib/contentParser";
 import { withBase } from "@lib/url";
 import { render } from "astro:content";
@@ -21,9 +23,11 @@ export async function getStaticPaths() {
 }
 
 const { entry, all } = Astro.props as { entry: EvidenciasEntry; all: EvidenciasEntry[] };
-const { title, description, items } = entry.data;
+const { title, description, items, downloads, exercises, comparison, project } = entry.data;
+const resourceIcons: Record<string, any> = { github: FaGithub, drive: FaFolderOpen, folder: FaFolderOpen, diagram: FaSitemap, link: FaLink };
+const layerIcons = [FaDesktop, FaServer, FaDatabase];
 const hasBody = Boolean(entry.body?.trim());
-const hasContent = hasBody || items.length > 0;
+const hasContent = hasBody || items.length > 0 || exercises.length > 0 || Boolean(project);
 const { Content } = await render(entry);
 ---
 
@@ -52,6 +56,108 @@ const { Content } = await render(entry);
           {
             hasContent ? (
               <div class="flex flex-col gap-8">
+                {downloads.length > 0 && (
+                  <div class="-mb-2 flex flex-wrap justify-end gap-2">
+                    {downloads.map((file) => (
+                      <a
+                        href={withBase(file.url)}
+                        download
+                        class="inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-sm font-semibold text-txt-p no-underline transition hover:bg-bg-s/50 dark:border-darkmode-border dark:text-darkmode-txt-p dark:hover:bg-darkmode-bg-s/50"
+                      >
+                        <FaDownload className="h-3.5 w-3.5" /> {file.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+                {exercises.length > 0 && (
+                  <div class="flex flex-wrap items-center gap-3 text-xs text-txt-light dark:text-darkmode-txt-light">
+                    <span class="font-semibold">Convenciones:</span>
+                    <span class="rounded px-2 py-0.5 font-semibold underline underline-offset-4 bg-amber-200/70 text-amber-950 dark:bg-amber-400/25 dark:text-amber-100">PK · llave primaria</span>
+                    <span class="rounded px-2 py-0.5 font-semibold italic bg-sky-200/70 text-sky-950 dark:bg-sky-400/25 dark:text-sky-100">FK · llave foránea</span>
+                    <span class="rounded px-2 py-0.5 font-semibold underline underline-offset-4 bg-violet-200/70 text-violet-950 dark:bg-violet-400/25 dark:text-violet-100">PK · FK</span>
+                  </div>
+                )}
+                {exercises.map((exercise, i) => (
+                  <NormalizationExercise
+                    id={`ejercicio-${i + 1}`}
+                    title={exercise.title}
+                    summary={exercise.summary}
+                    steps={exercise.steps}
+                  />
+                ))}
+                {comparison && (
+                  <article class="rounded-lg border border-border dark:border-darkmode-border bg-bg-p/40 dark:bg-darkmode-bg-p/40 p-5 md:p-6">
+                    <h2 class="h4 mb-4">{comparison.title}</h2>
+                    <div class="overflow-x-auto rounded-lg border border-border dark:border-darkmode-border">
+                      <table class="m-0 w-full min-w-[40rem] border-collapse text-left text-sm">
+                        <thead>
+                          <tr>
+                            {comparison.headers.map((header) => (
+                              <th scope="col" class="bg-bg-s/60 px-4 py-2 font-semibold text-txt-p dark:bg-darkmode-bg-s/60 dark:text-darkmode-txt-p">
+                                {header}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {comparison.rows.map((row) => (
+                            <tr class="border-t border-border dark:border-darkmode-border">
+                              {row.map((cell, c) =>
+                                c === 0 ? (
+                                  <th scope="row" class="w-1/5 bg-bg-s/30 px-4 py-2 align-top font-semibold text-txt-p dark:bg-darkmode-bg-s/30 dark:text-darkmode-txt-p">
+                                    {cell}
+                                  </th>
+                                ) : (
+                                  <td class="px-4 py-2 align-top">{cell}</td>
+                                )
+                              )}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </article>
+                )}
+                {project && (
+                  <header class="flex flex-col gap-4">
+                    <div>
+                      <span class="text-xs font-semibold uppercase tracking-widest text-txt-light dark:text-darkmode-txt-light">Proyecto de la asignatura</span>
+                      <h2 class="h3 mt-1 mb-2">{project.title}</h2>
+                      {project.tagline && (
+                        <div class="text-base font-semibold text-txt-p dark:text-darkmode-txt-p">{project.tagline}</div>
+                      )}
+                    </div>
+                    {project.summary.map((paragraph) => (
+                      <div class="text-sm md:text-base leading-relaxed">{paragraph}</div>
+                    ))}
+                    {project.stack.length > 0 && (
+                      <ul class="m-0 flex list-none flex-wrap gap-2 p-0" aria-label="Stack tecnológico">
+                        {project.stack.map((tech) => (
+                          <li class="glass-t shadow-none rounded-full px-3 py-1 text-xs font-semibold text-txt-p dark:text-darkmode-txt-p">{tech}</li>
+                        ))}
+                      </ul>
+                    )}
+                    {project.architecture.length > 0 && (
+                      <div>
+                        <div class="mb-3 text-sm font-semibold text-txt-p dark:text-darkmode-txt-p">Arquitectura</div>
+                        <div class="grid gap-3 md:grid-cols-3">
+                          {project.architecture.map((layer, i) => {
+                            const Icon = layerIcons[i % layerIcons.length];
+                            return (
+                              <div class="rounded-lg border border-border bg-bg-p/40 p-4 dark:border-darkmode-border dark:bg-darkmode-bg-p/40">
+                                <div class="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-txt-light dark:text-darkmode-txt-light">
+                                  <Icon className="h-3.5 w-3.5" /> {layer.layer}
+                                </div>
+                                <div class="mb-1 font-primary text-lg font-bold text-txt-p dark:text-darkmode-txt-p">{layer.tech}</div>
+                                <div class="text-sm">{layer.description}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </header>
+                )}
                 {hasBody && (
                   <div class="content">
                     <Content />
@@ -91,13 +197,13 @@ const { Content } = await render(entry);
                         </ul>
                       )}
                       {item.links.length > 0 && (
-                        <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                        <div class="mt-4 flex flex-wrap gap-3 text-sm">
                           {item.links.map((link) => (
                             <a
                               href={withBase(link.url)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              class="inline-flex items-center gap-1 font-semibold text-txt-p dark:text-darkmode-txt-p underline underline-offset-4"
+                              class="inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 font-semibold text-txt-p no-underline transition hover:bg-bg-s/50 hover:opacity-100 dark:border-darkmode-border dark:text-darkmode-txt-p dark:hover:bg-darkmode-bg-s/50"
                             >
                               {link.label} <FaExternalLinkAlt className="h-3 w-3" />
                             </a>
@@ -107,6 +213,31 @@ const { Content } = await render(entry);
                     </div>
                   </article>
                 ))}
+                {project && project.resources.length > 0 && (
+                  <section aria-labelledby="recursos-proyecto">
+                    <h2 id="recursos-proyecto" class="h4 mb-4">Recursos y entregables</h2>
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {project.resources.map((resource) => {
+                        const Icon = resourceIcons[resource.kind] ?? FaLink;
+                        return (
+                          <a
+                            href={withBase(resource.url)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group flex h-full flex-col gap-2 rounded-lg border border-border bg-bg-p/40 p-5 text-txt-s no-underline transition hover:-translate-y-0.5 hover:opacity-100 hover:shadow-lg dark:border-darkmode-border dark:bg-darkmode-bg-p/40 dark:text-darkmode-txt-s"
+                          >
+                            <div class="flex items-center justify-between">
+                              <Icon className="h-7 w-7 text-txt-p dark:text-darkmode-txt-p" />
+                              <FaExternalLinkAlt className="h-3.5 w-3.5 opacity-50 transition group-hover:opacity-100" />
+                            </div>
+                            <div class="font-semibold text-txt-p dark:text-darkmode-txt-p">{resource.title}</div>
+                            <div class="text-sm">{resource.description}</div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
               </div>
             ) : (
               <div class="flex flex-col items-center text-center gap-4 py-6">
@@ -129,4 +260,5 @@ const { Content } = await render(entry);
     </div>
   </section>
   {items.length > 0 && <Lightbox />}
+  {exercises.length > 0 && <TabsScript />}
 </BaseLayout>

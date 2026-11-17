@@ -37,6 +37,9 @@ items:
       - Cardinalidades
       - Especialización
       - Llaves foráneas
+    links:
+      - label: Diagrama en Google Drive
+        url: https://drive.google.com/file/d/1qJAohr4dbw0OGUFg73iqPN3BNqUlkryW/view?usp=sharing
   - title: "Torneo de fútbol — Tabla de posiciones (MER)"
     description: "Relaciona PROGRAMA ACADÉMICO, JUGADOR, EQUIPO y PARTIDO, con TARJETA y TABLA como entidades débiles (relaciones identificadoras Registrar y Pertenecer). Incluye atributos multivaluados (documento, contacto, uniforme), compuestos (nombre_completo, historial_partidos) y derivados (edad), con cardinalidades 1:N y M:N."
     image: /images/evidencias/modelado/torneo-futbol-mer.png
@@ -49,4 +52,7 @@ items:
       - Entidades débiles
       - Atributos multivaluados
       - Atributos derivados
+    links:
+      - label: Diagrama en Google Drive
+        url: https://drive.google.com/file/d/1UKo0h7-GazA0V1KF6LjiiRkP7Xu-ARPU/view?usp=sharing
 ---

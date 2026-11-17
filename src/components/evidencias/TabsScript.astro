@@ -1,0 +1,51 @@
+<style is:global>
+  [data-tab-panel][hidden] {
+    display: none !important;
+  }
+  [data-tabs] .tab-btn[aria-selected="true"] {
+    background-color: rgb(0 0 0 / 0.85);
+    border-color: transparent;
+    color: #fff;
+  }
+  html.dark [data-tabs] .tab-btn[aria-selected="true"] {
+    background-color: rgb(255 255 255 / 0.9);
+    color: #111;
+  }
+  [data-tabs] .tab-btn[aria-selected="false"]:hover {
+    opacity: 0.7;
+  }
+</style>
+
+<script>
+  const selectTab = (tab: HTMLElement) => {
+    const root = tab.closest("[data-tabs]");
+    if (!root) return;
+    const tabs = Array.from(root.querySelectorAll<HTMLElement>("[data-tab]"));
+    tabs.forEach((t) => {
+      const selected = t === tab;
+      t.setAttribute("aria-selected", String(selected));
+      t.tabIndex = selected ? 0 : -1;
+      const panel = document.getElementById(t.getAttribute("aria-controls") ?? "");
+      if (panel) panel.hidden = !selected;
+    });
+  };
+
+  document.addEventListener("click", (event) => {
+    const tab = (event.target as HTMLElement).closest<HTMLElement>("[data-tab]");
+    if (tab) selectTab(tab);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    const tab = (event.target as HTMLElement).closest<HTMLElement>("[data-tab]");
+    if (!tab || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    const tabs = Array.from(tab.closest("[data-tabs]")!.querySelectorAll<HTMLElement>("[data-tab]"));
+    const i = tabs.indexOf(tab);
+    const next =
+      event.key === "Home" ? 0 :
+      event.key === "End" ? tabs.length - 1 :
+      (i + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    event.preventDefault();
+    tabs[next].focus();
+    selectTab(tabs[next]);
+  });
+</script>

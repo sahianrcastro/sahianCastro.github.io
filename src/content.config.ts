@@ -109,6 +109,70 @@ const evidencias = defineCollection({
         }),
       )
       .default([]),
+    downloads: z
+      .array(z.object({ label: z.string(), url: z.string() }))
+      .default([]),
+    exercises: z
+      .array(
+        z.object({
+          title: z.string(),
+          summary: z.string().optional(),
+          steps: z.array(
+            z.object({
+              label: z.string(),
+              status: z.string().optional(),
+              rule: z.string().optional(),
+              problem: z.array(z.string()).default([]),
+              consequence: z.array(z.string()).default([]),
+              dependencies: z.array(z.string()).default([]),
+              analysis: z.string().optional(),
+              tables: z
+                .array(
+                  z.object({
+                    name: z.string(),
+                    columns: z.array(z.string()),
+                  }),
+                )
+                .default([]),
+            }),
+          ),
+        }),
+      )
+      .default([]),
+    project: z
+      .object({
+        title: z.string(),
+        tagline: z.string().optional(),
+        summary: z.array(z.string()).default([]),
+        stack: z.array(z.string()).default([]),
+        architecture: z
+          .array(
+            z.object({
+              layer: z.string(),
+              tech: z.string(),
+              description: z.string(),
+            }),
+          )
+          .default([]),
+        resources: z
+          .array(
+            z.object({
+              title: z.string(),
+              description: z.string(),
+              url: z.string(),
+              kind: z.enum(["github", "drive", "folder", "diagram", "link"]).default("link"),
+            }),
+          )
+          .default([]),
+      })
+      .optional(),
+    comparison: z
+      .object({
+        title: z.string(),
+        headers: z.array(z.string()),
+        rows: z.array(z.array(z.string())),
+      })
+      .optional(),
   }),
 });
 

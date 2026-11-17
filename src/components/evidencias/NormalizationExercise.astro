@@ -1,0 +1,148 @@
+---
+import RelationTable from "@components/evidencias/RelationTable.astro";
+import { FaExclamationTriangle, FaQuestionCircle, FaProjectDiagram, FaCheckCircle, FaBook } from "react-icons/fa";
+
+interface Step {
+  label: string;
+  status?: string;
+  rule?: string;
+  problem: string[];
+  consequence: string[];
+  dependencies: string[];
+  analysis?: string;
+  tables: { name: string; columns: string[] }[];
+}
+
+interface Props {
+  id: string;
+  title: string;
+  summary?: string;
+  steps: Step[];
+}
+
+const { id, title, summary, steps } = Astro.props;
+---
+
+<article class="rounded-lg border border-border dark:border-darkmode-border bg-bg-p/40 dark:bg-darkmode-bg-p/40 p-5 md:p-6" data-tabs>
+  <h2 class="h4 mb-1">{title}</h2>
+  {summary && <div class="mb-4 text-sm text-txt-light dark:text-darkmode-txt-light">{summary}</div>}
+
+  <div role="tablist" aria-label={`Pasos de normalización: ${title}`} class="mb-5 flex gap-2 overflow-x-auto pb-1">
+    {
+      steps.map((step, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`${id}-tab-${i}`}
+          aria-controls={`${id}-panel-${i}`}
+          aria-selected={i === 0 ? "true" : "false"}
+          tabindex={i === 0 ? 0 : -1}
+          data-tab
+          class="tab-btn shrink-0 whitespace-nowrap rounded-full border border-border px-4 py-1.5 text-sm font-semibold text-txt-p transition dark:border-darkmode-border dark:text-darkmode-txt-p"
+        >
+          {i > 0 && <span class="mr-1 opacity-50" aria-hidden="true">→</span>}
+          {step.label}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    steps.map((step, i) => (
+      <section
+        role="tabpanel"
+        id={`${id}-panel-${i}`}
+        aria-labelledby={`${id}-tab-${i}`}
+        hidden={i !== 0}
+        data-tab-panel
+        class="flex flex-col gap-5"
+      >
+        <div class="flex flex-wrap items-center gap-2">
+          <h3 class="h5 m-0">{step.label}</h3>
+          {step.status && (
+            <span
+              class={`rounded-full px-3 py-0.5 text-xs font-semibold ${
+                step.status.toLowerCase().includes("ya")
+                  ? "bg-emerald-200/70 text-emerald-950 dark:bg-emerald-400/20 dark:text-emerald-100"
+                  : "bg-rose-200/70 text-rose-950 dark:bg-rose-400/20 dark:text-rose-100"
+              }`}
+            >
+              {step.status}
+            </span>
+          )}
+        </div>
+
+        {step.rule && (
+          <div class="flex gap-3 rounded-lg border-l-4 border-txt-light bg-bg-s/40 px-4 py-3 text-sm dark:border-darkmode-txt-light dark:bg-darkmode-bg-s/40">
+            <FaBook className="mt-1 h-4 w-4 shrink-0 opacity-70" />
+            <div>
+              <strong class="text-txt-p dark:text-darkmode-txt-p">Regla aplicada: </strong>
+              {step.rule}
+            </div>
+          </div>
+        )}
+
+        {(step.problem.length > 0 || step.consequence.length > 0) && (
+          <div class="grid gap-4 md:grid-cols-2">
+            {step.problem.length > 0 && (
+              <div class="rounded-lg border border-border p-4 text-sm dark:border-darkmode-border">
+                <div class="mb-2 flex items-center gap-2 font-semibold text-txt-p dark:text-darkmode-txt-p">
+                  <FaExclamationTriangle className="h-4 w-4 opacity-70" /> Problema
+                </div>
+                <ul class="m-0 list-disc space-y-1 pl-5">
+                  {step.problem.map((line) => <li>{line}</li>)}
+                </ul>
+              </div>
+            )}
+            {step.consequence.length > 0 && (
+              <div class="rounded-lg border border-border p-4 text-sm dark:border-darkmode-border">
+                <div class="mb-2 flex items-center gap-2 font-semibold text-txt-p dark:text-darkmode-txt-p">
+                  <FaQuestionCircle className="h-4 w-4 opacity-70" /> ¿Qué pasaría si no?
+                </div>
+                <ul class="m-0 list-disc space-y-1 pl-5">
+                  {step.consequence.map((line) => <li>{line}</li>)}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {step.tables.length > 0 && (
+          <div>
+            <div class="mb-3 text-sm font-semibold text-txt-p dark:text-darkmode-txt-p">
+              {step.tables.length > 1 ? "Esquema resultante" : "Tabla"}
+            </div>
+            <div class="flex flex-col gap-4">
+              {step.tables.map((table) => (
+                <RelationTable name={table.name} columns={table.columns} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step.dependencies.length > 0 && (
+          <div class="rounded-lg border border-border p-4 text-sm dark:border-darkmode-border">
+            <div class="mb-2 flex items-center gap-2 font-semibold text-txt-p dark:text-darkmode-txt-p">
+              <FaProjectDiagram className="h-4 w-4 opacity-70" /> Dependencias funcionales
+            </div>
+            <ul class="m-0 list-none space-y-1 p-0 font-mono text-xs md:text-sm">
+              {step.dependencies.map((dep) => (
+                <li class="rounded bg-bg-s/40 px-2 py-1 dark:bg-darkmode-bg-s/40">{dep}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {step.analysis && (
+          <div class="flex gap-3 rounded-lg bg-emerald-100/50 px-4 py-3 text-sm dark:bg-emerald-400/10">
+            <FaCheckCircle className="mt-1 h-4 w-4 shrink-0 opacity-70" />
+            <div>
+              <strong class="text-txt-p dark:text-darkmode-txt-p">Análisis: </strong>
+              {step.analysis}
+            </div>
+          </div>
+        )}
+      </section>
+    ))
+  }
+</article>
