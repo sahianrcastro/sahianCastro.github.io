@@ -24,7 +24,7 @@ const entries = ((await getEntries("evidencias")) as EvidenciasEntry[]).sort(
       <div class="row">
         {
           entries.map((entry) => {
-            const hasContent = Boolean(entry.body?.trim()) || entry.data.items.length > 0 || entry.data.exercises.length > 0 || Boolean(entry.data.project);
+            const hasContent = Boolean(entry.body?.trim()) || entry.data.items.length > 0 || entry.data.exercises.length > 0 || Boolean(entry.data.project) || Boolean(entry.data.sql);
             return (
               <div class="col-12 sm:col-6 lg:col-3 mb-6">
                 <a

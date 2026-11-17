@@ -1,0 +1,75 @@
+<div
+  id="copy-toast"
+  role="status"
+  aria-live="polite"
+  class="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 translate-y-4 rounded-full bg-black/85 px-4 py-2 text-sm font-semibold text-white opacity-0 shadow-lg transition duration-300 dark:bg-white/90 dark:text-black"
+>
+</div>
+
+<style is:global>
+  #copy-toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .sql-code pre {
+    margin: 0;
+    padding: 2.75rem 1rem 1rem;
+    border-radius: 0;
+    min-width: max-content;
+  }
+</style>
+
+<script>
+  let toastTimer: number | undefined;
+
+  const showToast = (message: string) => {
+    const toast = document.getElementById("copy-toast");
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add("show");
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+  };
+
+  const copyText = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      area.remove();
+      return ok;
+    }
+  };
+
+  document.addEventListener("click", async (event) => {
+    const trigger = (event.target as HTMLElement).closest<HTMLElement>("[data-copy-text], [data-copy-from]");
+    if (!trigger) return;
+    event.preventDefault();
+
+    let text = trigger.dataset.copyText ?? "";
+    if (trigger.dataset.copyFrom) {
+      const source = document.getElementById(trigger.dataset.copyFrom);
+      text = source?.querySelector("pre")?.textContent ?? source?.textContent ?? "";
+    }
+    if (!text) return;
+
+    const ok = await copyText(text.trimEnd());
+    showToast(ok ? trigger.dataset.copyMessage ?? "¡Copiado!" : "No se pudo copiar");
+
+    const label = trigger.querySelector<HTMLElement>("[data-copy-label]");
+    if (label && ok) {
+      const original = label.dataset.original ?? label.textContent ?? "";
+      label.dataset.original = original;
+      label.textContent = "¡Copiado!";
+      window.setTimeout(() => (label.textContent = original), 1800);
+    }
+  });
+</script>

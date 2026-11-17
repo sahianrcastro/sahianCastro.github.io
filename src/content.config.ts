@@ -166,6 +166,35 @@ const evidencias = defineCollection({
           .default([]),
       })
       .optional(),
+    sql: z
+      .object({
+        intro: z.array(z.string()).default([]),
+        facts: z
+          .array(z.object({ value: z.string(), label: z.string() }))
+          .default([]),
+        notes: z.array(z.string()).default([]),
+        groups: z
+          .array(
+            z.object({
+              title: z.string(),
+              description: z.string().optional(),
+              file: z.string(),
+              mode: z.enum(["sections", "queries"]).default("sections"),
+              filter: z.enum(["all", "basic", "join"]).default("all"),
+              sections: z
+                .array(
+                  z.object({
+                    title: z.string(),
+                    description: z.string().optional(),
+                    lines: z.tuple([z.number(), z.number()]).optional(),
+                  }),
+                )
+                .default([]),
+            }),
+          )
+          .default([]),
+      })
+      .optional(),
     comparison: z
       .object({
         title: z.string(),

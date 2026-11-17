@@ -1,8 +1,11 @@
 ---
 import Social from "@components/common/Social.astro";
+import CopyToast from "@components/common/CopyToast.astro";
 import { withBase } from "@lib/url";
+import { FaEnvelope } from "react-icons/fa";
 
 const year = new Date().getFullYear();
+const email = "sahianrcastro@gmail.com";
 ---
 
 <footer class="glass container lg:my-4 lg:rounded-lg intersect:animate-fadeUp opacity-0">
@@ -14,7 +17,18 @@ const year = new Date().getFullYear();
         </li>
       </ul>
     </div>
-    <div class="text-center lg:col-6 lg:my-0 flex items-center justify-center lg:justify-end">
+    <div class="text-center lg:col-6 lg:my-0 flex flex-wrap items-center justify-center gap-1 lg:justify-end">
+      <a
+        href={`mailto:${email}`}
+        data-copy-text={email}
+        data-copy-message={`¡Correo copiado: ${email}!`}
+        class="glass-t inline-flex h-9 items-center gap-2 rounded px-3 text-sm font-semibold text-txt-p no-underline dark:text-darkmode-txt-p"
+        aria-label={`Copiar correo ${email}`}
+        title="Clic para copiar el correo"
+      >
+        <FaEnvelope className="h-4 w-4" />
+        <span>{email}</span>
+      </a>
       <Social
         links={{
           github: "https://github.com/sahianrcastro",
@@ -23,3 +37,4 @@ const year = new Date().getFullYear();
     </div>
   </div>
 </footer>
+<CopyToast />
